@@ -25,20 +25,7 @@ print(response.cookies.items())
 csrf_token = response.text.split('name="csrfToken" id="csrfToken" value="')[1].split('"')[0]
 
 # Set up the login data
-login_data = {
-    'username': USERNAME,
-    'password': PASSWORD,
-    'csrfToken': csrf_token
-}
 
-# Send a POST request to the login URL with the login data
-response = session.post(LOGIN_URL, data=login_data, verify=False)
-
-# Check if the login was successful
-if '로그인 실패' in response.text:
-    print('Login failed')
-else:
-    print('Login successful')
 
 # Set up email settings
 FROM_EMAIL = 'ystc1247@gmail.com'
@@ -50,7 +37,7 @@ URL = 'https://www.swmaestro.org/sw/mypage/mentoLec/list.do?menuNo=200046&search
 REFRESH_INTERVAL = 60 # seconds
 
 # Define the index of the desired td element
-index = 2
+index = 4
 
 # Initialize the previous number to None
 prev_number = None
@@ -64,6 +51,20 @@ creds = flow.run_local_server(port=0)
 
 service = build('gmail', 'v1', credentials=creds)
 while True:
+    login_data = {
+        'username': USERNAME,
+        'password': PASSWORD,
+        'csrfToken': csrf_token
+    }
+
+    # Send a POST request to the login URL with the login data
+    response = session.post(LOGIN_URL, data=login_data, verify=False)
+
+    # Check if the login was successful
+    if '로그인 실패' in response.text:
+        print('Login failed')
+    else:
+        print('Login successful')
     # Make a GET request to the URL and extract the HTML content
     response = requests.get(URL, verify=False)
     html = response.text
@@ -71,10 +72,13 @@ while True:
     # Find the index of the nth occurrence of the "pc_only" class
     start_index = 0
     for i in range(index):
-        start_index = html.find('class="pc_only">', start_index) + len('class="pc_only">')
+        start_index = html.find('col', start_index) + len('col')
+        end_index = html.find('</td>', start_index)
+        number = html[start_index:end_index]
+        print(number)
 
     # Find the index of the closing </td> tag
-    end_index = html.find('</td>', start_index)
+
 
     # Extract the number using string slicing
     number = html[start_index:end_index]
