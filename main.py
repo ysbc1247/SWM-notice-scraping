@@ -9,6 +9,37 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from requests import HTTPError
 
+# Set the login URL and credentials
+LOGIN_URL = 'https://www.swmaestro.org/sw/member/user/forLogin.do?menuNo=200025'
+USERNAME = 'your_username_here'
+PASSWORD = 'your_password_here'
+
+# Create a session object
+session = requests.Session()
+
+# Send a GET request to the login page to get any required CSRF tokens or cookies
+response = session.get(LOGIN_URL, verify=False)
+print(response.cookies.items())
+
+# Extract the CSRF token from the response
+csrf_token = response.text.split('name="csrfToken" id="csrfToken" value="')[1].split('"')[0]
+
+# Set up the login data
+login_data = {
+    'username': USERNAME,
+    'password': PASSWORD,
+    'csrfToken': csrf_token
+}
+
+# Send a POST request to the login URL with the login data
+response = session.post(LOGIN_URL, data=login_data, verify=False)
+
+# Check if the login was successful
+if '로그인 실패' in response.text:
+    print('Login failed')
+else:
+    print('Login successful')
+
 # Set up email settings
 FROM_EMAIL = 'ystc1247@gmail.com'
 PASSWORD = 'kj10501050'
