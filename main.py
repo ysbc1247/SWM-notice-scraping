@@ -3,6 +3,11 @@ from email.message import EmailMessage
 from email.mime.text import MIMEText
 import requests
 import time
+import base64
+from email.mime.text import MIMEText
+from google_auth_oauthlib.flow import InstalledAppFlow
+from googleapiclient.discovery import build
+from requests import HTTPError
 
 # Set up email settings
 FROM_EMAIL = 'ystc1247@gmail.com'
