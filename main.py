@@ -24,6 +24,14 @@ index = 2
 # Initialize the previous number to None
 prev_number = None
 
+SCOPES = [
+        "https://www.googleapis.com/auth/gmail.send"
+    ]
+flow = InstalledAppFlow.from_client_secrets_file('client_secret_1087873534390-mik2p0h17fr0vs6692o4nl8vilbahse3.apps'
+                                                 '.googleusercontent.com.json', SCOPES)
+creds = flow.run_local_server(port=0)
+
+service = build('gmail', 'v1', credentials=creds)
 while True:
     # Make a GET request to the URL and extract the HTML content
     response = requests.get(URL, verify=False)
@@ -44,18 +52,22 @@ while True:
     if prev_number is None or number != prev_number:
         # Construct the email message
         message = EmailMessage()
-        message['From'] = FROM_EMAIL
         message['To'] = TO_EMAIL
         message['Subject'] = 'New Mentoring Notification'
 
         # Send the email using Gmail's SMTP server
-        with smtplib.SMTP('smtp.gmail.com', 587) as smtp:
-            smtp.starttls()
-            smtp.login(FROM_EMAIL, PASSWORD)
-            smtp.send_message(message)
+        create_message = {'raw': base64.urlsafe_b64encode(message.as_bytes()).decode()}
+
+        try:
+            message = (service.users().messages().send(userId="me", body=create_message).execute())
+            print(F'sent message to {message} Message Id: {message["id"]}')
+        except HTTPError as error:
+            print(F'An error occurred: {error}')
+            message = None
 
         # Update the previous number
         prev_number = number
+        print(prev_number)
 
     # Wait for the specified interval before checking again
     time.sleep(REFRESH_INTERVAL)
