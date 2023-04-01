@@ -11,8 +11,8 @@ from requests import HTTPError
 
 # Set the login URL and credentials
 LOGIN_URL = 'https://www.swmaestro.org/sw/member/user/forLogin.do?menuNo=200025'
-USERNAME = 'your_username_here'
-PASSWORD = 'your_password_here'
+USERNAME = 'ysbc1247@gmail.com'
+PASSWORD = 'kj10501050!'
 
 # Create a session object
 session = requests.Session()
@@ -66,13 +66,13 @@ while True:
     else:
         print('Login successful')
     # Make a GET request to the URL and extract the HTML content
-    response = requests.get(URL, verify=False)
+    response = session.get(URL, verify=False)
     html = response.text
 
     # Find the index of the nth occurrence of the "pc_only" class
     start_index = 0
     for i in range(index):
-        start_index = html.find('col', start_index) + len('col')
+        start_index = html.find('class="pc_only">', start_index) + len('class="pc_only">')
         end_index = html.find('</td>', start_index)
         number = html[start_index:end_index]
         print(number)
