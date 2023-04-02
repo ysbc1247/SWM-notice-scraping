@@ -11,8 +11,8 @@ from requests import HTTPError
 
 # Set the login URL and credentials
 LOGIN_URL = 'https://www.swmaestro.org/sw/member/user/forLogin.do?menuNo=200025'
-USERNAME = 'ysbc1247@gmail.com'
-PASSWORD = 'kj10501050!'
+USERNAME = email
+PASSWORD = pw
 
 # Create a session object
 session = requests.Session()
@@ -29,7 +29,7 @@ csrf_token = response.text.split('name="csrfToken" id="csrfToken" value="')[1].s
 
 # Set up email settings
 FROM_EMAIL = 'ystc1247@gmail.com'
-PASSWORD = 'kj10501050'
+PASSWORD = pw
 TO_EMAIL = 'ysbc1247@gmail.com'
 
 # Set up scraping settings
